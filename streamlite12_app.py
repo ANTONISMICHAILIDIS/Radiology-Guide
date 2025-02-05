@@ -55,6 +55,45 @@ lesion_enhancement = st.sidebar.selectbox(
 )
 
 # =============================================================================
+# Function to Retrieve a Sample Image URL & Caption (if available)
+# =============================================================================
+def get_image_info(modality, organ, lesion_type):
+    """
+    Return a tuple (image_url, caption) based on the selected parameters.
+    These URLs are examples sourced from Wikimedia Commons or other free repositories.
+    """
+    # CT Brain Mass example image
+    if modality == "CT" and organ == "Brain" and lesion_type == "Mass":
+        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/CT_scan_of_brain_tumour.jpg/640px-CT_scan_of_brain_tumour.jpg",
+                "CT Brain Mass Example")
+    # CT Brain Hemorrhage
+    elif modality == "CT" and organ == "Brain" and lesion_type == "Hemorrhage":
+        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Intracerebral_hemorrhage_CT_scan.jpg/640px-Intracerebral_hemorrhage_CT_scan.jpg",
+                "CT Brain Hemorrhage Example")
+    # CT Chest Mass
+    elif modality == "CT" and organ == "Chest" and lesion_type == "Mass":
+        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Chest_CT_scan.png/640px-Chest_CT_scan.png",
+                "CT Chest Mass Example")
+    # MRI Brain Mass
+    elif modality == "MRI" and organ == "Brain" and lesion_type == "Mass":
+        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/MRI_brain_tumor.jpg/640px-MRI_brain_tumor.jpg",
+                "MRI Brain Mass Example")
+    # Ultrasound Thyroid Mass
+    elif modality == "Ultrasound" and organ == "Thyroid" and lesion_type == "Mass":
+        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Thyroid_ultrasound.jpg/640px-Thyroid_ultrasound.jpg",
+                "Ultrasound Thyroid Nodule Example")
+    # Nuclear Medicine Bone Scan
+    elif modality == "Nuclear Medicine" and organ == "Bone":
+        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Bone_scan.jpg/640px-Bone_scan.jpg",
+                "Bone Scan Example")
+    # MRI Musculoskeletal Cystic Lesion
+    elif modality == "MRI" and organ == "Musculoskeletal" and lesion_type == "Cystic Lesion":
+        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/MRI_of_bone_cyst.jpg/640px-MRI_of_bone_cyst.jpg",
+                "MRI Musculoskeletal Cystic Lesion Example")
+    else:
+        return (None, None)
+
+# =============================================================================
 # Comprehensive Diagnostic Guide Generator
 # =============================================================================
 def get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin, lesion_appearance, lesion_enhancement):
@@ -70,7 +109,7 @@ def get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin,
     
     guide += "---\n\n"
     
-    # ===================== CT Brain =====================
+    # ===================== CT Brain Mass =====================
     if modality == "CT" and organ == "Brain" and lesion_type == "Mass":
         guide += "### CT Brain Mass Guide\n\n"
         guide += "**Differential Diagnosis:**\n"
@@ -202,7 +241,7 @@ def get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin,
         guide += "- Compare with plain radiographs to assess for any periosteal reaction or matrix mineralization.\n"
         guide += "- See [Radiopaedia – Aneurysmal Bone Cyst](https://radiopaedia.org/articles/aneurysmal-bone-cyst) for detailed imaging examples.\n\n"
     
-    # ===================== Nuclear Medicine Bone Scan Lesion =====================
+    # ===================== Nuclear Medicine Bone Scan =====================
     elif modality == "Nuclear Medicine" and organ == "Bone":
         guide += "### Nuclear Medicine Bone Scan Guide\n\n"
         guide += "**Differential Diagnosis:**\n"
@@ -211,7 +250,7 @@ def get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin,
         guide += "- **Inflammatory/Arthritic Changes:** Diffuse uptake in inflammatory arthropathies\n\n"
         
         guide += "**Imaging Features:**\n"
-        guide += "- **Uptake Pattern:** Focal, multifocal, or diffuse increased tracer uptake; correlate with known anatomic structures.\n"
+        guide += "- **Uptake Pattern:** Focal, multifocal, or diffuse increased tracer uptake; correlate with anatomic findings.\n"
         guide += "- **Comparison:** Always compare with previous studies if available.\n\n"
         
         guide += "**Additional Tips:**\n"
@@ -228,10 +267,10 @@ def get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin,
         guide += "- For ambiguous cases, advanced imaging (MRI, PET-CT) or image-guided biopsy may be warranted.\n\n"
         
         guide += "**Anatomical and Vascular Considerations:**\n"
-        guide += "- Familiarize yourself with normal regional anatomy and its variations. For example:\n"
-        guide += "  - **Brain:** Variations in circle of Willis configuration.\n"
+        guide += "- Familiarize yourself with the normal regional anatomy and its variations. For example:\n"
+        guide += "  - **Brain:** Variations in the circle of Willis configuration.\n"
         guide += "  - **Chest:** Variations in bronchial artery origin (e.g., arising from intercostal arteries).\n"
-        guide += "  - **Abdomen/Pelvis:** Hepatic arterial variants (replaced right or left hepatic arteries), renal arterial accessory branches.\n\n"
+        guide += "  - **Abdomen/Pelvis:** Hepatic arterial variants (replaced right or left hepatic arteries), accessory renal arteries.\n\n"
         
         guide += "**Additional Resources:**\n"
         guide += "For in-depth information on less common scenarios, please refer to Radiopaedia and other peer-reviewed resources:\n"
@@ -248,3 +287,10 @@ def get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin,
 st.header("Diagnostic Pocket Guide Output")
 output_text = get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin, lesion_appearance, lesion_enhancement)
 st.text_area("Complete Diagnostic Guide", value=output_text, height=800)
+
+# =============================================================================
+# Display a Relevant Image (if available)
+# =============================================================================
+image_url, image_caption = get_image_info(modality, organ, lesion_type)
+if image_url:
+    st.image(image_url, caption=image_caption, use_column_width=True)
