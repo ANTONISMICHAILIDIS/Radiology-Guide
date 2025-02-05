@@ -9,288 +9,354 @@ st.markdown("<p style='font-size:12px'>Created by Michailidis A. for free use</p
 st.markdown("**Disclaimer:** This guide is for educational purposes only. It is not a substitute for professional clinical judgment.")
 
 # =============================================================================
-# Sidebar: Input Parameters
+# Top-Level Guide Mode Selection
 # =============================================================================
-st.sidebar.header("Diagnostic Parameters")
-
-# 1. Select Imaging Modality
-modality = st.sidebar.selectbox(
-    "Select Imaging Modality:",
-    ["X-Ray", "CT", "MRI", "Ultrasound", "Nuclear Medicine"]
-)
-
-# 2. Select Organ/System based on Modality
-organ_options = []
-if modality == "X-Ray":
-    organ_options = ["Chest", "Skeletal", "Abdomen", "Head/Neck", "Spine"]
-elif modality == "CT":
-    organ_options = ["Brain", "Chest", "Abdomen/Pelvis", "Musculoskeletal", "Vascular"]
-elif modality == "MRI":
-    organ_options = ["Brain", "Spine", "Musculoskeletal", "Abdomen", "Pelvis"]
-elif modality == "Ultrasound":
-    organ_options = ["Abdomen", "Pelvis", "Thyroid", "Musculoskeletal"]
-elif modality == "Nuclear Medicine":
-    organ_options = ["Bone", "Cardiac", "Oncology"]
-organ = st.sidebar.selectbox("Select Organ/System:", organ_options)
-
-# 3. Select Type of Lesion
-lesion_type = st.sidebar.selectbox(
-    "Select Lesion Type:",
-    ["Mass", "Cystic Lesion", "Calcification", "Hemorrhage", "Inflammatory", "Vascular Malformation", "Degenerative"]
-)
-
-# 4. Additional Lesion Characteristics
-st.sidebar.header("Lesion Characteristics")
-lesion_size = st.sidebar.text_input("Lesion Size (cm):", "e.g., 2.5")
-lesion_margin = st.sidebar.selectbox("Lesion Margin:", 
-                                     ["Well-circumscribed", "Ill-defined", "Spiculated", "Infiltrative"])
-lesion_appearance = st.sidebar.selectbox(
-    "Lesion Appearance (Density/Signal):", 
-    ["Hyperdense/Hyperattenuating", "Hypodense/Hypoattenuating", "Isodense/Isoattenuating", 
-     "Mixed", "T2 Hyperintense", "T1 Hypointense"]
-)
-lesion_enhancement = st.sidebar.selectbox(
-    "Enhancement Pattern (if applicable):", 
-    ["None", "Homogeneous", "Heterogeneous", "Ring-enhancing", "Peripheral enhancement", "Progressive", "Washout"]
-)
+guide_mode = st.sidebar.radio("Select Guide Mode:", options=["Lesion Analysis", "Radiology Topics"])
 
 # =============================================================================
-# Function to Retrieve a Sample Image URL & Caption (if available)
+# SECTION 1: LESION ANALYSIS
 # =============================================================================
-def get_image_info(modality, organ, lesion_type):
-    """
-    Return a tuple (image_url, caption) based on the selected parameters.
-    These URLs are examples sourced from Wikimedia Commons or other free repositories.
-    """
-    # CT Brain Mass example image
-    if modality == "CT" and organ == "Brain" and lesion_type == "Mass":
-        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/CT_scan_of_brain_tumour.jpg/640px-CT_scan_of_brain_tumour.jpg",
-                "CT Brain Mass Example")
-    # CT Brain Hemorrhage
-    elif modality == "CT" and organ == "Brain" and lesion_type == "Hemorrhage":
-        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Intracerebral_hemorrhage_CT_scan.jpg/640px-Intracerebral_hemorrhage_CT_scan.jpg",
-                "CT Brain Hemorrhage Example")
-    # CT Chest Mass
-    elif modality == "CT" and organ == "Chest" and lesion_type == "Mass":
-        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Chest_CT_scan.png/640px-Chest_CT_scan.png",
-                "CT Chest Mass Example")
-    # MRI Brain Mass
-    elif modality == "MRI" and organ == "Brain" and lesion_type == "Mass":
-        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/MRI_brain_tumor.jpg/640px-MRI_brain_tumor.jpg",
-                "MRI Brain Mass Example")
-    # Ultrasound Thyroid Mass
-    elif modality == "Ultrasound" and organ == "Thyroid" and lesion_type == "Mass":
-        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Thyroid_ultrasound.jpg/640px-Thyroid_ultrasound.jpg",
-                "Ultrasound Thyroid Nodule Example")
-    # Nuclear Medicine Bone Scan
-    elif modality == "Nuclear Medicine" and organ == "Bone":
-        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Bone_scan.jpg/640px-Bone_scan.jpg",
-                "Bone Scan Example")
-    # MRI Musculoskeletal Cystic Lesion
-    elif modality == "MRI" and organ == "Musculoskeletal" and lesion_type == "Cystic Lesion":
-        return ("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/MRI_of_bone_cyst.jpg/640px-MRI_of_bone_cyst.jpg",
-                "MRI Musculoskeletal Cystic Lesion Example")
-    else:
+if guide_mode == "Lesion Analysis":
+    st.sidebar.header("Lesion Analysis Parameters")
+    # Imaging modality, organ, lesion type
+    modality = st.sidebar.selectbox(
+        "Select Imaging Modality:",
+        ["X-Ray", "CT", "MRI", "Ultrasound", "Nuclear Medicine"]
+    )
+    # Organ/System options based on modality
+    organ_options = []
+    if modality == "X-Ray":
+        organ_options = ["Chest", "Skeletal", "Abdomen", "Head/Neck", "Spine"]
+    elif modality == "CT":
+        organ_options = ["Brain", "Chest", "Abdomen/Pelvis", "Musculoskeletal", "Vascular"]
+    elif modality == "MRI":
+        organ_options = ["Brain", "Spine", "Musculoskeletal", "Abdomen", "Pelvis"]
+    elif modality == "Ultrasound":
+        organ_options = ["Abdomen", "Pelvis", "Thyroid", "Musculoskeletal"]
+    elif modality == "Nuclear Medicine":
+        organ_options = ["Bone", "Cardiac", "Oncology"]
+    organ = st.sidebar.selectbox("Select Organ/System:", organ_options)
+    
+    lesion_type = st.sidebar.selectbox(
+        "Select Lesion Type:",
+        ["Mass", "Cystic Lesion", "Calcification", "Hemorrhage", "Inflammatory", "Vascular Malformation", "Degenerative"]
+    )
+    
+    # Expanded lesion characteristics – additional fields for detailed analysis
+    st.sidebar.header("Lesion Characteristics")
+    lesion_size = st.sidebar.text_input("Lesion Size (cm):", "e.g., 2.5")
+    lesion_margin = st.sidebar.selectbox("Lesion Margin:", 
+                                         ["Well-circumscribed", "Ill-defined", "Spiculated", "Infiltrative", "Lobulated"])
+    lesion_shape = st.sidebar.selectbox("Lesion Shape:", 
+                                        ["Round/Oval", "Irregular", "Angular", "Multilobulated"])
+    lesion_internal = st.sidebar.selectbox("Internal Architecture:",
+                                           ["Homogeneous", "Heterogeneous", "Necrotic", "Cystic areas", "Solid"])
+    lesion_calcification = st.sidebar.selectbox("Calcification Pattern:",
+                                                ["None", "Central", "Diffuse", "Punctate", "Stippled", "Popcorn"])
+    lesion_vascularity = st.sidebar.selectbox("Vascularity:",
+                                               ["None", "Low", "Moderate", "High", "Flow voids on MRI"])
+    lesion_signal = st.sidebar.selectbox("Signal / Density Characteristics:",
+                                          ["Hyperdense/Hyperattenuating", "Hypodense/Hypoattenuating", "Isodense/Isoattenuating", 
+                                           "T1 Hyperintense", "T1 Hypointense", "T2 Hyperintense", "T2 Hypointense", "Mixed"])
+    lesion_enhancement = st.sidebar.selectbox(
+        "Enhancement Pattern (if applicable):", 
+        ["None", "Homogeneous", "Heterogeneous", "Ring-enhancing", "Peripheral enhancement", "Progressive", "Washout", "Centripetal"]
+    )
+    additional_features = st.sidebar.text_area("Additional Features (optional):", "e.g., diffusion restriction, hemorrhagic components, edema, etc.")
+
+    # =============================================================================
+    # Function: Comprehensive Lesion Analysis Guide
+    # =============================================================================
+    def get_complete_lesion_guide(modality, organ, lesion_type, lesion_size, lesion_margin, lesion_shape,
+                                  lesion_internal, lesion_calcification, lesion_vascularity, lesion_signal,
+                                  lesion_enhancement, additional_features):
+        guide = f"## Lesion Analysis Guide\n\n"
+        guide += f"**Modality:** {modality}\n\n"
+        guide += f"**Organ/System:** {organ}\n\n"
+        guide += f"**Lesion Type:** {lesion_type}\n\n"
+        guide += "**Provided Characteristics:**\n"
+        guide += f"- **Size:** {lesion_size} cm\n"
+        guide += f"- **Margin:** {lesion_margin}\n"
+        guide += f"- **Shape:** {lesion_shape}\n"
+        guide += f"- **Internal Architecture:** {lesion_internal}\n"
+        guide += f"- **Calcification:** {lesion_calcification}\n"
+        guide += f"- **Vascularity:** {lesion_vascularity}\n"
+        guide += f"- **Signal/Density:** {lesion_signal}\n"
+        guide += f"- **Enhancement:** {lesion_enhancement}\n"
+        guide += f"- **Additional Features:** {additional_features}\n\n"
+        guide += "---\n\n"
+        
+        # (For brevity, we add only a few exemplary branches here. In a full app, you would include many combinations.)
+        if modality == "CT" and organ == "Brain" and lesion_type == "Mass":
+            guide += "### CT Brain Mass\n\n"
+            guide += "**Differential Diagnosis:**\n"
+            guide += "- Glioma (including glioblastoma multiforme), astrocytoma, oligodendroglioma\n"
+            guide += "- Metastasis (consider multiple lesions if known primary)\n"
+            guide += "- Meningioma (if extra-axial with dural tail)\n"
+            guide += "- Brain abscess (if ring-enhancing with surrounding edema)\n\n"
+            
+            guide += "**Key Imaging Features:**\n"
+            guide += "- Compare lesion density with normal gray and white matter.\n"
+            guide += "- Infiltrative margins and heterogeneous signal suggest high-grade gliomas.\n"
+            guide += "- Homogeneous enhancement is often seen in metastases; ring-enhancement may indicate necrosis or abscess.\n"
+            guide += "- Check for calcifications (common in oligodendrogliomas) using bone windows.\n\n"
+            
+            guide += "**Anatomical Considerations:**\n"
+            guide += "- Evaluate the lesion’s location relative to the ventricles and midline structures.\n"
+            guide += "- Assess perilesional edema and mass effect.\n"
+            guide += "- Review vascular supply (e.g., deep perforators).\n\n"
+            guide += "For more details, please refer to [Radiopaedia – Brain Tumour](https://radiopaedia.org/articles/brain-tumour).\n\n"
+        
+        elif modality == "Ultrasound" and organ == "Thyroid" and lesion_type == "Mass":
+            guide += "### Ultrasound Thyroid Nodule\n\n"
+            guide += "**Differential Diagnosis:**\n"
+            guide += "- Benign: Colloid nodule, thyroid adenoma, cystic degeneration\n"
+            guide += "- Malignant: Papillary thyroid carcinoma (most common), follicular carcinoma, medullary carcinoma\n\n"
+            
+            guide += "**Key Imaging Features:**\n"
+            guide += "- Hypoechoic nodules with irregular margins are more suspicious.\n"
+            guide += "- Microcalcifications and increased intranodular vascularity raise concern for malignancy.\n"
+            guide += "- TI-RADS criteria may be applied for risk stratification.\n\n"
+            
+            guide += "**Anatomical Considerations:**\n"
+            guide += "- Note the nodule’s relationship to the thyroid capsule and adjacent structures such as the recurrent laryngeal nerve.\n\n"
+            guide += "For further guidance, visit [Radiopaedia – Thyroid Nodule](https://radiopaedia.org/articles/thyroid-nodule).\n\n"
+        
+        else:
+            guide += "### General Lesion Analysis\n\n"
+            guide += "Review the lesion's morphology, internal architecture, enhancement, and additional imaging features.\n"
+            guide += "Always correlate with clinical history and prior imaging studies.\n"
+            guide += "If uncertain, consider additional imaging modalities (e.g., MRI, PET-CT) or image-guided biopsy.\n"
+            guide += "Refer to [Radiopaedia](https://radiopaedia.org/) for extensive case examples and discussions.\n\n"
+        
+        guide += "---\n"
+        guide += "**Remember:** This analysis is intended as an educational aid. Always integrate imaging with clinical findings and expert consultation.\n"
+        return guide
+
+    # Display the lesion analysis guide output
+    lesion_output = get_complete_lesion_guide(modality, organ, lesion_type, lesion_size, lesion_margin, 
+                                              lesion_shape, lesion_internal, lesion_calcification,
+                                              lesion_vascularity, lesion_signal, lesion_enhancement,
+                                              additional_features)
+    st.header("Lesion Analysis Output")
+    st.text_area("Detailed Lesion Analysis", value=lesion_output, height=600)
+    
+    # Optionally display a relevant image (if available)
+    def get_lesion_image(modality, organ, lesion_type):
+        if modality == "CT" and organ == "Brain" and lesion_type == "Mass":
+            return ("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/CT_scan_of_brain_tumour.jpg/640px-CT_scan_of_brain_tumour.jpg", "CT Brain Mass Example")
+        elif modality == "Ultrasound" and organ == "Thyroid" and lesion_type == "Mass":
+            return ("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Thyroid_ultrasound.jpg/640px-Thyroid_ultrasound.jpg", "Ultrasound Thyroid Nodule Example")
+        # ... add additional image mappings as needed ...
         return (None, None)
+    
+    img_url, img_caption = get_lesion_image(modality, organ, lesion_type)
+    if img_url:
+        st.image(img_url, caption=img_caption, use_container_width=True)
 
 # =============================================================================
-# Comprehensive Diagnostic Guide Generator
+# SECTION 2: RADIOLOGY TOPICS
 # =============================================================================
-def get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin, lesion_appearance, lesion_enhancement):
-    guide = f"## Radiology Pocket Guide Output\n\n"
-    guide += f"**Modality:** {modality}\n\n"
-    guide += f"**Organ/System:** {organ}\n\n"
-    guide += f"**Lesion Type:** {lesion_type}\n\n"
-    guide += f"**Provided Characteristics:**\n"
-    guide += f"- **Size:** {lesion_size} cm\n"
-    guide += f"- **Margin:** {lesion_margin}\n"
-    guide += f"- **Appearance:** {lesion_appearance}\n"
-    guide += f"- **Enhancement:** {lesion_enhancement}\n\n"
+elif guide_mode == "Radiology Topics":
+    st.sidebar.header("Radiology Topics Parameters")
+    topic_mode = st.sidebar.radio("Select Topic Mode:", options=["By Section", "By System", "Cases"])
     
-    guide += "---\n\n"
+    if topic_mode == "By Section":
+        section_options = [
+            "Anatomy", "Approach", "Artificial Intelligence", "Classifications", "Gamuts",
+            "Imaging Technology", "Interventional Radiology", "Mnemonics", "Pathology",
+            "Radiography", "Signs", "Staging", "Syndromes"
+        ]
+        section = st.sidebar.selectbox("Select Section:", section_options)
+    elif topic_mode == "By System":
+        system_options = [
+            "Breast", "Cardiac", "Central Nervous System", "Chest", "Forensic", "Gastrointestinal",
+            "Gynaecology", "Haematology", "Head & Neck", "Hepatobiliary", "Interventional", 
+            "Musculoskeletal", "Obstetrics", "Oncology", "Paediatrics", "Spine", "Trauma", 
+            "Urogenital", "Vascular"
+        ]
+        system = st.sidebar.selectbox("Select System:", system_options)
+    else:  # Cases
+        case_options = [
+            "Breast", "Cardiac", "Central Nervous System", "Chest", "Forensic", "Gastrointestinal",
+            "Gynaecology", "Haematology", "Head & Neck", "Hepatobiliary", "Interventional", 
+            "Musculoskeletal", "Obstetrics", "Oncology", "Paediatrics", "Spine", "Trauma", 
+            "Urogenital", "Vascular"
+        ]
+        case = st.sidebar.selectbox("Select Case Type:", case_options)
     
-    # ===================== CT Brain Mass =====================
-    if modality == "CT" and organ == "Brain" and lesion_type == "Mass":
-        guide += "### CT Brain Mass Guide\n\n"
-        guide += "**Differential Diagnosis:**\n"
-        guide += "- **Primary Brain Tumors:** Glioma (including glioblastoma multiforme), astrocytoma, oligodendroglioma\n"
-        guide += "- **Metastatic Lesions:** Especially in patients with a known primary tumor\n"
-        guide += "- **Extra-Axial Lesions:** Meningioma (look for a dural tail) and schwannoma\n"
-        guide += "- **Infectious/Inflammatory:** Brain abscess, tuberculoma, or tumefactive demyelination\n\n"
+    # =============================================================================
+    # Function: Radiology Topic Guide Generator
+    # =============================================================================
+    def get_topic_guide(topic_mode, selection):
+        guide = f"## Radiology Topics Guide\n\n"
+        if topic_mode == "By Section":
+            guide += f"### Section: {selection}\n\n"
+            if selection == "Anatomy":
+                guide += "**Anatomy in Radiology:**\n"
+                guide += "- Detailed anatomical descriptions including normal variants and vascular supply.\n"
+                guide += "- Example: Anatomy of the Circle of Willis, bronchial arterial variations, hepatic arterial variants, etc.\n"
+                guide += "- [Radiopaedia – Anatomy](https://radiopaedia.org/articles/anatomy)\n\n"
+            elif selection == "Approach":
+                guide += "**Approaches in Radiology:**\n"
+                guide += "- Discussion of imaging protocols, patient positioning, and interventional approaches.\n"
+                guide += "- Examples include CT-guided biopsies, ultrasound-guided drainage, and fluoroscopy-guided procedures.\n\n"
+            elif selection == "Artificial Intelligence":
+                guide += "**Artificial Intelligence in Radiology:**\n"
+                guide += "- AI applications for image analysis, segmentation, and computer-aided diagnosis.\n"
+                guide += "- Future trends and current research in deep learning for radiology.\n\n"
+            elif selection == "Classifications":
+                guide += "**Radiologic Classifications:**\n"
+                guide += "- Standardized systems (e.g., BI-RADS, LI-RADS, TI-RADS) used to categorize lesions.\n\n"
+            elif selection == "Gamuts":
+                guide += "**Radiology Gamuts:**\n"
+                guide += "- Comprehensive lists of disease processes for a given finding (e.g., differential diagnosis of a pulmonary nodule).\n\n"
+            elif selection == "Imaging Technology":
+                guide += "**Imaging Technology:**\n"
+                guide += "- Advances in imaging modalities, such as high-resolution CT, functional MRI, and digital radiography.\n\n"
+            elif selection == "Interventional Radiology":
+                guide += "**Interventional Radiology:**\n"
+                guide += "- Techniques, devices, and protocols for image-guided interventions.\n"
+                guide += "- Examples include embolization, ablation, and vascular stenting.\n\n"
+            elif selection == "Mnemonics":
+                guide += "**Radiology Mnemonics:**\n"
+                guide += "- Memory aids to recall imaging findings and differential diagnoses.\n"
+                guide += "- Example: " + '"VINDICATE" (Vascular, Infectious, Neoplastic, Degenerative, Iatrogenic, Congenital, Autoimmune, Traumatic, Endocrine).\n\n'
+            elif selection == "Pathology":
+                guide += "**Pathology:**\n"
+                guide += "- Radiologic-pathologic correlation for various disease entities.\n\n"
+            elif selection == "Radiography":
+                guide += "**Radiography:**\n"
+                guide += "- Principles and techniques of plain film imaging.\n\n"
+            elif selection == "Signs":
+                guide += "**Radiologic Signs:**\n"
+                guide += "- Named signs (e.g., “thumbprint sign”, “air crescent sign”) and their diagnostic implications.\n\n"
+            elif selection == "Staging":
+                guide += "**Staging in Radiology:**\n"
+                guide += "- Imaging criteria for cancer staging and response assessment.\n\n"
+            elif selection == "Syndromes":
+                guide += "**Radiologic Syndromes:**\n"
+                guide += "- Descriptions of syndromes as seen on imaging (e.g., “Pancoast syndrome”, “Stafne bone cavity”).\n\n"
+            else:
+                guide += "Detailed information on this section is not available yet.\n\n"
+        elif topic_mode == "By System":
+            guide += f"### System: {selection}\n\n"
+            if selection == "Breast":
+                guide += "**Breast Imaging:**\n"
+                guide += "- Techniques: Mammography, ultrasound, MRI.\n"
+                guide += "- Common findings: masses, calcifications, architectural distortions.\n"
+                guide += "- Standardized reporting: BI-RADS.\n\n"
+            elif selection == "Cardiac":
+                guide += "**Cardiac Imaging:**\n"
+                guide += "- Modalities: Cardiac CT, MRI, and nuclear imaging.\n"
+                guide += "- Topics: Coronary artery disease, cardiomyopathies, congenital heart disease.\n\n"
+            elif selection == "Central Nervous System":
+                guide += "**CNS Imaging:**\n"
+                guide += "- Modalities: CT, MRI, PET.\n"
+                guide += "- Topics: Brain tumors, stroke, demyelinating disease.\n\n"
+            elif selection == "Chest":
+                guide += "**Chest Imaging:**\n"
+                guide += "- Modalities: Chest X-ray, CT, MRI, PET-CT.\n"
+                guide += "- Topics: Lung nodules, interstitial lung disease, mediastinal masses.\n\n"
+            elif selection == "Forensic":
+                guide += "**Forensic Radiology:**\n"
+                guide += "- Applications: Post-mortem imaging, trauma assessment, identification.\n\n"
+            elif selection == "Gastrointestinal":
+                guide += "**Gastrointestinal Imaging:**\n"
+                guide += "- Modalities: CT, MRI, ultrasound.\n"
+                guide += "- Topics: Abdominal masses, inflammatory bowel disease, pancreatitis.\n\n"
+            elif selection == "Gynaecology":
+                guide += "**Gynaecologic Imaging:**\n"
+                guide += "- Modalities: Ultrasound, MRI, CT.\n"
+                guide += "- Topics: Ovarian masses, uterine fibroids, endometrial pathology.\n\n"
+            elif selection == "Haematology":
+                guide += "**Haematologic Imaging:**\n"
+                guide += "- Topics: Lymphadenopathy, splenomegaly, marrow disorders.\n\n"
+            elif selection == "Head & Neck":
+                guide += "**Head & Neck Imaging:**\n"
+                guide += "- Modalities: CT, MRI, ultrasound.\n"
+                guide += "- Topics: Thyroid nodules, salivary gland tumors, lymph node evaluation.\n\n"
+            elif selection == "Hepatobiliary":
+                guide += "**Hepatobiliary Imaging:**\n"
+                guide += "- Modalities: Ultrasound, CT, MRI, nuclear medicine.\n"
+                guide += "- Topics: Liver lesions, biliary obstruction, cirrhosis.\n\n"
+            elif selection == "Interventional":
+                guide += "**Interventional Radiology:**\n"
+                guide += "- Topics: Embolization, ablation, vascular interventions.\n\n"
+            elif selection == "Musculoskeletal":
+                guide += "**Musculoskeletal Imaging:**\n"
+                guide += "- Modalities: X-ray, CT, MRI, ultrasound.\n"
+                guide += "- Topics: Fractures, tumors, inflammatory arthropathies.\n\n"
+            elif selection == "Obstetrics":
+                guide += "**Obstetric Imaging:**\n"
+                guide += "- Modalities: Ultrasound, MRI.\n"
+                guide += "- Topics: Fetal anatomy, placental disorders, congenital anomalies.\n\n"
+            elif selection == "Oncology":
+                guide += "**Oncologic Imaging:**\n"
+                guide += "- Modalities: CT, MRI, PET-CT.\n"
+                guide += "- Topics: Tumor staging, treatment response, metastases.\n\n"
+            elif selection == "Paediatrics":
+                guide += "**Paediatric Imaging:**\n"
+                guide += "- Special considerations in radiation dose and imaging protocols.\n"
+                guide += "- Topics: Congenital anomalies, pediatric tumors, trauma.\n\n"
+            elif selection == "Spine":
+                guide += "**Spine Imaging:**\n"
+                guide += "- Modalities: X-ray, CT, MRI.\n"
+                guide += "- Topics: Disc herniations, tumors, degenerative changes.\n\n"
+            elif selection == "Trauma":
+                guide += "**Trauma Imaging:**\n"
+                guide += "- Modalities: X-ray, CT, MRI.\n"
+                guide += "- Topics: Fractures, hemorrhage, organ lacerations.\n\n"
+            elif selection == "Urogenital":
+                guide += "**Urogenital Imaging:**\n"
+                guide += "- Modalities: Ultrasound, CT, MRI.\n"
+                guide += "- Topics: Renal masses, bladder pathology, prostate evaluation.\n\n"
+            elif selection == "Vascular":
+                guide += "**Vascular Imaging:**\n"
+                guide += "- Modalities: CT angiography, MR angiography, ultrasound.\n"
+                guide += "- Topics: Aneurysms, dissections, occlusive disease.\n\n"
+            else:
+                guide += "Detailed system-specific guidance is under development.\n\n"
+        elif topic_mode == "Cases":
+            guide += f"### Radiology Cases: {selection}\n\n"
+            guide += "A collection of interesting and educational cases in this system:\n"
+            guide += "- Review rare and common pathologies\n"
+            guide += "- See examples of atypical presentations\n"
+            guide += "- Detailed discussion of imaging findings and clinical correlation\n\n"
+            guide += "For more cases, please visit [Radiopaedia Cases](https://radiopaedia.org/cases).\n\n"
+        else:
+            guide += "Topic not recognized. Please select a valid option.\n\n"
         
-        guide += "**Imaging Features:**\n"
-        guide += "- **Attenuation:** Compare lesion density with gray/white matter; necrosis or hemorrhage may cause heterogeneous attenuation.\n"
-        guide += "- **Margins:** Sharp margins may suggest metastases or meningioma; infiltrative margins are common in high-grade gliomas.\n"
-        guide += "- **Enhancement:** Homogeneous enhancement is seen in metastases and low-grade tumors, whereas ring enhancement is suggestive of abscess or necrotic high-grade lesions.\n"
-        guide += "- **Calcifications:** Present in oligodendrogliomas and some metastases; use bone windows to assess subtle calcifications.\n\n"
-        
-        guide += "**Anatomical Considerations:**\n"
-        guide += "- **Location:** Intra-axial vs. extra-axial; relation to the ventricular system and midline shift.\n"
-        guide += "- **Edema:** Perilesional edema may indicate tumor aggressiveness.\n"
-        guide += "- **Vascular Supply:** Evaluate the involvement of deep perforators or cortical branches.\n\n"
-        
-        guide += "**Additional Tips:**\n"
-        guide += "- Consider advanced imaging (MRI with diffusion, perfusion, and spectroscopy) for further characterization.\n"
-        guide += "- Correlate with clinical findings (e.g., age, immunocompromise, prior malignancies).\n"
-        guide += "- Refer to [Radiopaedia – Brain Tumour](https://radiopaedia.org/articles/brain-tumour) for comprehensive imaging examples.\n\n"
+        guide += "---\n"
+        guide += "**Note:** This section is an evolving repository of radiology knowledge. For the most up-to-date information, always consult primary resources and Radiopaedia directly.\n"
+        return guide
     
-    # ===================== CT Brain Hemorrhage =====================
-    elif modality == "CT" and organ == "Brain" and lesion_type == "Hemorrhage":
-        guide += "### CT Brain Hemorrhage Guide\n\n"
-        guide += "**Differential Diagnosis:**\n"
-        guide += "- **Intraparenchymal Hemorrhage:** Hypertensive hemorrhage, cerebral amyloid angiopathy\n"
-        guide += "- **Subarachnoid Hemorrhage:** Aneurysmal rupture, arteriovenous malformation (AVM)\n"
-        guide += "- **Extradural/Subdural Hematoma:** Trauma-related bleeding\n\n"
-        
-        guide += "**Imaging Features:**\n"
-        guide += "- **Density:** Acute blood is hyperdense; subacute/chronic blood evolves to isodense or hypodense over time.\n"
-        guide += "- **Location:** Typical locations include the basal ganglia (hypertensive) or convexities (traumatic).\n"
-        guide += "- **Associated Findings:** Look for midline shift, intraventricular extension, and skull fractures.\n\n"
-        
-        guide += "**Anatomical Considerations:**\n"
-        guide += "- **Vessel Anatomy:** Consider aneurysms in the circle of Willis for subarachnoid hemorrhage.\n"
-        guide += "- **Cortical Involvement:** Assess sulcal effacement and surrounding edema.\n\n"
-        
-        guide += "**Additional Tips:**\n"
-        guide += "- Immediate noncontrast CT is critical in the evaluation of suspected hemorrhage.\n"
-        guide += "- For further details, see [Radiopaedia – Intracranial Hemorrhage](https://radiopaedia.org/articles/intracranial-hemorrhage).\n\n"
-    
-    # ===================== CT Chest Mass =====================
-    elif modality == "CT" and organ == "Chest" and lesion_type == "Mass":
-        guide += "### CT Chest Mass Guide\n\n"
-        guide += "**Differential Diagnosis:**\n"
-        guide += "- **Primary Lung Carcinoma:** Adenocarcinoma, squamous cell carcinoma, small cell carcinoma\n"
-        guide += "- **Metastases:** Secondary deposits from extrapulmonary primaries\n"
-        guide += "- **Benign Lesions:** Hamartoma (often with popcorn calcifications), granuloma\n"
-        guide += "- **Lymphoma:** Mediastinal or pulmonary involvement\n\n"
-        
-        guide += "**Imaging Features:**\n"
-        guide += "- **Margins:** Spiculated or irregular margins are concerning for malignancy; smooth borders suggest benignity.\n"
-        guide += "- **Calcification:** Patterns (central, diffuse, eccentric) can help differentiate benign from malignant lesions.\n"
-        guide += "- **Cavitation:** Cavitary lesions may be seen in squamous cell carcinoma or infectious etiologies.\n"
-        guide += "- **Associated Findings:** Look for lymphadenopathy, pleural effusion, and signs of atelectasis.\n\n"
-        
-        guide += "**Anatomical Considerations:**\n"
-        guide += "- **Lobar Distribution:** Identify whether the lesion is central (hilar) or peripheral.\n"
-        guide += "- **Vascular Structures:** Consider proximity to major vessels and bronchi.\n\n"
-        
-        guide += "**Additional Tips:**\n"
-        guide += "- Compare with prior imaging to assess growth rate.\n"
-        guide += "- Correlate with patient history (smoking, occupational exposures).\n"
-        guide += "- For more details, refer to [Radiopaedia – Lung Mass](https://radiopaedia.org/articles/lung-mass).\n\n"
-    
-    # ===================== MRI Brain Mass =====================
-    elif modality == "MRI" and organ == "Brain" and lesion_type == "Mass":
-        guide += "### MRI Brain Mass Guide\n\n"
-        guide += "**Differential Diagnosis:**\n"
-        guide += "- **Primary Tumors:** Gliomas (low-grade vs. high-grade), meningioma, lymphoma\n"
-        guide += "- **Metastases:** Multiple lesions in a patient with a known malignancy\n"
-        guide += "- **Inflammatory/Granulomatous:** Demyelinating lesions, sarcoidosis\n\n"
-        
-        guide += "**Imaging Features:**\n"
-        guide += "- **Signal Characteristics:** Evaluate T1, T2, FLAIR, and diffusion sequences. Gliomas often have heterogeneous signal intensity with necrotic areas.\n"
-        guide += "- **Enhancement Patterns:** Homogeneous enhancement in meningioma; ring-enhancement in high-grade tumors or abscesses.\n"
-        guide += "- **Edema:** The extent of vasogenic edema can help differentiate high-grade lesions from low-grade ones.\n\n"
-        
-        guide += "**Anatomical Considerations:**\n"
-        guide += "- **Location:** Determine if the lesion is intra-axial versus extra-axial.\n"
-        guide += "- **Relationships:** Assess the involvement of adjacent structures, including the ventricles and cisterns.\n\n"
-        
-        guide += "**Additional Tips:**\n"
-        guide += "- Use advanced MRI techniques (MR spectroscopy, perfusion imaging) to further characterize the lesion.\n"
-        guide += "- Consult [Radiopaedia – MRI Brain Tumour](https://radiopaedia.org/articles/mri-brain-tumour) for an in-depth discussion.\n\n"
-    
-    # ===================== Ultrasound Thyroid Nodule =====================
-    elif modality == "Ultrasound" and organ == "Thyroid" and lesion_type == "Mass":
-        guide += "### Ultrasound Thyroid Nodule Guide\n\n"
-        guide += "**Differential Diagnosis:**\n"
-        guide += "- **Benign:** Colloid nodule, thyroid adenoma, cystic degeneration\n"
-        guide += "- **Malignant:** Papillary thyroid carcinoma (most common), follicular carcinoma, medullary thyroid carcinoma\n\n"
-        
-        guide += "**Imaging Features:**\n"
-        guide += "- **Echogenicity:** Hypoechoic nodules are more suspicious; heterogeneous echo texture raises concern.\n"
-        guide += "- **Margins:** Irregular, microlobulated, or spiculated margins are worrisome; smooth margins suggest benignity.\n"
-        guide += "- **Calcifications:** Presence of microcalcifications is highly suggestive of papillary carcinoma.\n"
-        guide += "- **Vascularity:** Increased central vascularity on Doppler imaging may be seen in malignant lesions.\n\n"
-        
-        guide += "**Anatomical Considerations:**\n"
-        guide += "- **Location:** Note the nodule’s position relative to the thyroid capsule and its proximity to critical structures (e.g., recurrent laryngeal nerve).\n"
-        guide += "- **Size Criteria:** Use standardized systems such as TI-RADS for risk stratification.\n\n"
-        
-        guide += "**Additional Tips:**\n"
-        guide += "- Consider fine-needle aspiration (FNA) biopsy if the nodule meets suspicious criteria.\n"
-        guide += "- For more comprehensive guidelines, visit [Radiopaedia – Thyroid Nodule](https://radiopaedia.org/articles/thyroid-nodule).\n\n"
-    
-    # ===================== MRI Musculoskeletal Cystic Lesion =====================
-    elif modality == "MRI" and organ == "Musculoskeletal" and lesion_type == "Cystic Lesion":
-        guide += "### MRI Musculoskeletal Cystic Lesion Guide\n\n"
-        guide += "**Differential Diagnosis:**\n"
-        guide += "- **Benign:** Simple bone cyst, ganglion cyst, synovial cyst\n"
-        guide += "- **Aneurysmal Bone Cyst (ABC):** Characterized by fluid–fluid levels\n"
-        guide += "- **Infectious:** Abscess formation in osteomyelitis\n\n"
-        
-        guide += "**Imaging Features:**\n"
-        guide += "- **Signal Characteristics:** Typically low signal on T1 and high signal on T2; fluid–fluid levels are characteristic of ABCs.\n"
-        guide += "- **Enhancement:** Minimal or peripheral enhancement in simple cysts; irregular enhancement suggests abscess or neoplasm.\n\n"
-        
-        guide += "**Anatomical Considerations:**\n"
-        guide += "- **Location in Bone:** Diaphyseal versus metaphyseal location may alter the differential.\n"
-        guide += "- **Cortical Involvement:** Evaluate for cortical thinning or expansion.\n\n"
-        
-        guide += "**Additional Tips:**\n"
-        guide += "- Compare with plain radiographs to assess for any periosteal reaction or matrix mineralization.\n"
-        guide += "- See [Radiopaedia – Aneurysmal Bone Cyst](https://radiopaedia.org/articles/aneurysmal-bone-cyst) for detailed imaging examples.\n\n"
-    
-    # ===================== Nuclear Medicine Bone Scan =====================
-    elif modality == "Nuclear Medicine" and organ == "Bone":
-        guide += "### Nuclear Medicine Bone Scan Guide\n\n"
-        guide += "**Differential Diagnosis:**\n"
-        guide += "- **Metastatic Disease:** Focal areas of increased uptake in patients with known malignancy\n"
-        guide += "- **Trauma:** Fractures or stress injuries often show focal tracer accumulation\n"
-        guide += "- **Inflammatory/Arthritic Changes:** Diffuse uptake in inflammatory arthropathies\n\n"
-        
-        guide += "**Imaging Features:**\n"
-        guide += "- **Uptake Pattern:** Focal, multifocal, or diffuse increased tracer uptake; correlate with anatomic findings.\n"
-        guide += "- **Comparison:** Always compare with previous studies if available.\n\n"
-        
-        guide += "**Additional Tips:**\n"
-        guide += "- Consider SPECT/CT for improved anatomical localization when necessary.\n"
-        guide += "- Refer to [Radiopaedia – Bone Scan](https://radiopaedia.org/articles/bone-scan) for further information.\n\n"
-    
-    # ===================== Default / General Guidance =====================
+    # Display the Radiology Topics guide output
+    if topic_mode == "By Section":
+        topic_output = get_topic_guide(topic_mode, section)
+    elif topic_mode == "By System":
+        topic_output = get_topic_guide(topic_mode, system)
     else:
-        guide += "### Comprehensive Diagnostic Approach\n\n"
-        guide += "**General Recommendations:**\n"
-        guide += "- Carefully review the lesion’s morphology, signal/density characteristics, and enhancement patterns.\n"
-        guide += "- Always correlate imaging findings with the patient’s clinical history, laboratory values, and prior imaging studies.\n"
-        guide += "- Consider using standardized reporting systems such as BI-RADS (breast), LI-RADS (liver), or TI-RADS (thyroid) when applicable.\n"
-        guide += "- For ambiguous cases, advanced imaging (MRI, PET-CT) or image-guided biopsy may be warranted.\n\n"
-        
-        guide += "**Anatomical and Vascular Considerations:**\n"
-        guide += "- Familiarize yourself with the normal regional anatomy and its variations. For example:\n"
-        guide += "  - **Brain:** Variations in the circle of Willis configuration.\n"
-        guide += "  - **Chest:** Variations in bronchial artery origin (e.g., arising from intercostal arteries).\n"
-        guide += "  - **Abdomen/Pelvis:** Hepatic arterial variants (replaced right or left hepatic arteries), accessory renal arteries.\n\n"
-        
-        guide += "**Additional Resources:**\n"
-        guide += "For in-depth information on less common scenarios, please refer to Radiopaedia and other peer-reviewed resources:\n"
-        guide += "- [Radiopaedia Home](https://radiopaedia.org/)\n"
-        guide += "- [PubMed](https://pubmed.ncbi.nlm.nih.gov/)\n\n"
+        topic_output = get_topic_guide(topic_mode, case)
     
-    guide += "---\n\n"
-    guide += "**Remember:** Always integrate imaging findings with clinical data and consult subspecialty experts as needed. This guide is intended as an educational tool and not a definitive diagnostic resource.\n"
-    return guide
+    st.header("Radiology Topics Output")
+    st.text_area("Detailed Radiology Guide", value=topic_output, height=600)
+    
+    # Optionally display a generic image for topics (if desired)
+    def get_topic_image(topic_mode, selection):
+        # Here you can define image URLs for various topics
+        if topic_mode == "By Section" and selection == "Anatomy":
+            return ("https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Gray1124.png/640px-Gray1124.png", "Human Anatomy Example")
+        elif topic_mode == "By System" and selection == "Breast":
+            return ("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Mammogram_2.jpg/640px-Mammogram_2.jpg", "Breast Imaging Example")
+        # Add more mappings as needed...
+        return (None, None)
+    
+    topic_img_url, topic_img_caption = get_topic_image(topic_mode, section if topic_mode=="By Section" else (system if topic_mode=="By System" else case))
+    if topic_img_url:
+        st.image(topic_img_url, caption=topic_img_caption, use_container_width=True)
 
 # =============================================================================
-# Display the Comprehensive Diagnostic Guide Output
+# End of App
 # =============================================================================
-st.header("Diagnostic Pocket Guide Output")
-output_text = get_complete_guide(modality, organ, lesion_type, lesion_size, lesion_margin, lesion_appearance, lesion_enhancement)
-st.text_area("Complete Diagnostic Guide", value=output_text, height=800)
-
-# =============================================================================
-# Display a Relevant Image (if available)
-# =============================================================================
-image_url, image_caption = get_image_info(modality, organ, lesion_type)
-if image_url:
-    st.image(image_url, caption=image_caption, use_column_width=True)
+st.markdown("For further study, please visit [Radiopaedia](https://radiopaedia.org/) and other peer-reviewed resources.")
